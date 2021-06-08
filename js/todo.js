@@ -15,10 +15,11 @@ function deleteToDo(event) {
     li.remove();
 }
 
-function paintToDo(newToDo) {
+function paintToDo(toDoObj) {
     const li = document.createElement("li");
+    li.id = toDoObj.id;
     const span = document.createElement("span");
-    span.innerHTML = newToDo;
+    span.innerHTML = toDoObj.text;
     const button = document.createElement("button");
     button.innerText = "❌";
     button.addEventListener("click", deleteToDo);
@@ -31,8 +32,12 @@ function handleToDoSubmit(event) {
     event.preventDefault();
     const newToDo = toDoInput.value;
     toDoInput.value = "";
-    toDos.push(newToDo);
-    paintToDo(newToDo);
+    const newToDoObj = {
+        id: Date.now(),
+        text: newToDo,
+    };
+    toDos.push(newToDoObj);
+    paintToDo(newToDoObj);
     saveToDos();
 }
 
@@ -45,5 +50,6 @@ function sayHello(item) {
 const savedToDos = localStorage.getItem(TODOS_KEY);
 if (savedToDos !== null) {
     const parsedToDos = JSON.parse(savedToDos);
-    parsedToDos.forEach(sayHello);
+    toDos = parsedToDos;
+    parsedToDos.forEach(paintToDo);
 }
